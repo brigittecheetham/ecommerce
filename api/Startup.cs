@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using infrastructure.Data;
+using core.Interfaces;
 
 namespace api
 {
@@ -24,6 +25,7 @@ namespace api
             services.AddControllers();
             //services.AddDbContext<StoreContext>(x => x.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<StoreContext>(x => x.UseSqlServer("Data Source=VADER\\SQL2012; Initial Catalog=Ecommerce; User=sa; Pwd=Pa33w0rd;"));
+            services.AddScoped<IProductRepository, ProductRepository>();
             
             services.AddSwaggerGen(c =>
             {
