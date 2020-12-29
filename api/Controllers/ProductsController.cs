@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using infrastructure.Data;
 using core.Entities;
 using core.Interfaces;
+using AutoMapper;
+using api.Dtos;
+using System.Linq;
 
 namespace api.Controllers
 {
@@ -11,26 +13,28 @@ namespace api.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly StoreContext _context;
         private readonly IProductRepository _productRepository;
-        public ProductsController(StoreContext context, IProductRepository productRepository)
+        private readonly IMapper _mapper;
+        public ProductsController(IProductRepository productRepository, IMapper mapper)
         {
+            _mapper = mapper;
             _productRepository = productRepository;
-            _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<Dtos.ProductResponseDto>>> GetProducts()
         {
             var products = await _productRepository.GetProductsAsync();
-            return Ok(products);
+            var productDtos = products.Select(x => _mapper.Map<Product,ProductResponseDto>(x));
+            return Ok(productDtos);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductResponseDto>> GetProduct(int id)
         {
             var product = await _productRepository.GetProductByIdAsync(id);
-            return Ok(product);
+            var productDto = _mapper.Map<Product, ProductResponseDto>(product);
+            return Ok(productDto);
         }
 
         [HttpGet("types")]
