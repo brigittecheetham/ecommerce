@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -10,14 +9,7 @@ export class AppComponent implements OnInit{
   
   title = 'Anchors of Faith';
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.http.get('https://localhost:5001/api/products').subscribe((response: any) => {
-      console.log(response);
-    }, error => {
-      console.log(error)
-    });
-
-  }
+  ngOnInit(): void {}
 }
