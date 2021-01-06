@@ -53,6 +53,10 @@ namespace api.Controllers
         public async Task<ActionResult<ProductResponseDto>> GetProduct(int id)
         {
             var product = await _productRepository.GetProductByIdAsync(id);
+            
+            if (product == null)
+                return NotFound(new ApiResponse(404));
+
             var productDto = _mapper.Map<Product, ProductResponseDto>(product);
             return Ok(productDto);
         }
