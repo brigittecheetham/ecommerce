@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using api.Errors;
 using System.Text.Json.Serialization;
+using StackExchange.Redis;
+using System;
 
 namespace api
 {
@@ -42,9 +44,15 @@ namespace api
                     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-            //services.AddDbContext<StoreContext>(x => x.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<StoreContext>(x => x.UseSqlServer("Data Source=VADER\\SQL2012; Initial Catalog=Ecommerce; User=sa; Pwd=Pa33w0rd;"));
+            services.AddDbContext<StoreContext>(x => x.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+        
+            services.AddSingleton<IConnectionMultiplexer>(c => {
+                var configuration = ConfigurationOptions.Parse(_configuration.GetConnectionString("Redis"), true);
+                return ConnectionMultiplexer.Connect(configuration);
+            });
+
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddAutoMapper(typeof(MappingProfiles));
 
             services.AddSwaggerGen(c =>

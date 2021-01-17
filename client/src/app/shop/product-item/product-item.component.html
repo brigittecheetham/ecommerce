@@ -11,6 +11,7 @@
     <span class="mb-2">{{ product.price | currency }}</span>
     <div class="btn-group mt-auto">
       <button
+        (click)="addItemToBasket()"
         type="button"
         class="btn btn-outline-secondary fa fa-shopping-cart mr-2"
       ></button>
