@@ -1,5 +1,6 @@
 using api.Errors;
 using infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -12,7 +13,14 @@ namespace api.Controllers
             _context = context;
 
         }
-        
+        [HttpGet("testauth")]
+        [Authorize]
+        public ActionResult<string> GetSecret()
+        {
+            return "secret stuff";
+        }
+
+
         [HttpGet("notfound")]
         public ActionResult GetNotFoundRequest()
         {
@@ -33,14 +41,14 @@ namespace api.Controllers
 
             return Ok();
         }
-        
+
         [HttpGet("badrequest")]
         public ActionResult GetBadRequest()
         {
             return BadRequest(new ApiResponse(400));
         }
 
-                
+
         [HttpGet("badrequest/{id}")]
         public ActionResult GetBadRequestFormat(int id)
         {
