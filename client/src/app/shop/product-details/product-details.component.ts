@@ -17,7 +17,7 @@ export class ProductDetailsComponent implements OnInit {
   quantity: number = 1;
 
   constructor(private shopService: ShopService, private activatedRoute: ActivatedRoute, private breadcrumbService: BreadcrumbService, private basketService: BasketService) {
-    this.breadcrumbService.set('@productDetails', '');
+    this.breadcrumbService.set('@productDetails', ' ');
     console.log(this.breadcrumbService);
    }
 
