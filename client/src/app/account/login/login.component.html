@@ -2,7 +2,7 @@
   <div class="col-3">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <h1 class="h3 mb-3 fw-normal">Login</h1>
-
+<!-- 
       <div class="mb-3">
         <label for="inputEmail" class="visually-hidden">Email address</label>
         <input
@@ -14,21 +14,54 @@
           required=""
           autofocus=""
         />
+        <span
+          class="text-danger"
+          *ngIf="
+            loginForm.get('email').invalid &&
+            loginForm.get('email').touched &&
+            loginForm.get('email').errors['required']
+          "
+        >
+          Email address is required
+        </span>
+        <span
+          class="text-danger"
+          *ngIf="
+            loginForm.get('email').invalid &&
+            loginForm.get('email').touched &&
+            loginForm.get('email').errors['pattern']
+          "
+        >
+          Invalid Email address
+        </span>        
       </div>
 
       <div class="mb-3">
         <label for="inputPassword" class="visually-hidden">Password</label>
         <input
-        formControlName="password"
+          formControlName="password"
           type="password"
           id="inputPassword"
           class="form-control"
           placeholder="Password"
           required=""
         />
-      </div>
+        <span
+          class="text-danger"
+          *ngIf="
+            loginForm.get('password').invalid &&
+            loginForm.get('password').touched &&
+            loginForm.get('password').errors['required']
+          "
+        >
+          Password is required
+        </span>        
+      </div> -->
 
-      <button class="w-100 btn btn-md btn-primary mt-3" type="submit">
+      <app-text-input formControlName="email" [label]="'Email Address'"></app-text-input>
+      <app-text-input formControlName="password" [label]="'Password'" [type]="'password'"></app-text-input>
+
+      <button [disabled]="loginForm.invalid" class="w-100 btn btn-md btn-primary mt-3" type="submit">
         Sign in
       </button>
     </form>

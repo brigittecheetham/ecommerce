@@ -1,0 +1,50 @@
+<div class="mb-3">
+  
+  <label for="{{ label }}" class="visually-hidden">{{ label }}</label>
+  <div *ngIf="controlDir && controlDir.control && controlDir.control.status === 'PENDING'" class="fa fa-spinner fa-spin loader"></div>  
+  <input
+    [ngClass]="
+      controlDir && controlDir.control && controlDir.control.touched
+        ? !controlDir.control.valid
+          ? 'is-invalid'
+          : 'is-valid'
+        : null
+    "
+    [type]="type"
+    (input)="onChanged($event.target.value)"
+    (blur)="onTouched()"
+    #input
+    id="{{ label }}"
+    id="inputEmail"
+    class="form-control"
+    placeholder="{{ label }}"
+  />
+
+  <div
+    class="invalid-feedback"
+    *ngIf="
+      controlDir &&
+      controlDir.control &&
+      controlDir.control.touched &&
+      !controlDir.control.valid
+    "
+  >
+    <span *ngIf="controlDir.control.errors?.required"
+      >{{ label }} is required</span
+    >
+    <span *ngIf="controlDir.control.errors?.pattern">Invalid {{ label }}</span>
+  </div>
+  <div
+    class="invalid-feedback d-block"
+    *ngIf="
+      controlDir &&
+      controlDir.control &&
+      controlDir.control.dirty &&
+      !controlDir.control.valid
+    "
+  >
+    <span *ngIf="controlDir.control.errors?.emailExists"
+      >Value for {{ label }} already exists</span
+    >
+  </div>
+</div>
