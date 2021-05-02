@@ -2,7 +2,7 @@ using core.Enumerations;
 
 namespace core.RepositoryObjects
 {
-    public class ProductRepositoryObject
+    public class ProductRepositoryObject : IRepositoryParameters
     {
         public ProductSortByEnum? SortBy { get; set; }
         public SortOrderEnum? SortOrder { get; set; }

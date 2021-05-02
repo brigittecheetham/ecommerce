@@ -13,39 +13,14 @@ namespace infrastructure.Data
     {
         private readonly StoreContext _context;
 
+        public ProductRepository()
+        {
+            
+        }
+
         public ProductRepository(StoreContext context)
         {
             _context = context;
-        }
-
-        public async Task<IReadOnlyList<ProductBrand>> GetProductBrandsAsync()
-        {
-            var brands = await _context.ProductBrands.ToListAsync();
-            return brands;
-        }
-
-        public async Task<Product> GetProductByIdAsync(int id)
-        {
-            var productQuery = GetProductsQuery();
-            return await productQuery.FirstOrDefaultAsync(p => p.Id == id);
-        }
-
-        public async Task<IReadOnlyList<Product>> GetProductsAsync(ProductRepositoryObject productRepositoryObject)
-        {
-            var productsQuery = GetProductsQuery(productRepositoryObject.BrandId, productRepositoryObject.TypeId, productRepositoryObject.SortBy, productRepositoryObject.SortOrder, productRepositoryObject.Skip, productRepositoryObject.Take, productRepositoryObject.IsPagingEnabled, productRepositoryObject.Search);
-            return await productsQuery.ToListAsync();
-        }
-
-        public async Task<int> CountAsync(ProductRepositoryObject productRepositoryObject)
-        {
-            var productsQuery = GetProductsQuery(productRepositoryObject.BrandId, productRepositoryObject.TypeId, productRepositoryObject.SortBy, productRepositoryObject.SortOrder, productRepositoryObject.Skip, productRepositoryObject.Take, false, productRepositoryObject.Search);
-            return await productsQuery.CountAsync();
-        }
-
-        public async Task<IReadOnlyList<ProductType>> GetProductTypesAsync()
-        {
-            var types = await _context.ProductTypes.ToListAsync();
-            return types;
         }
 
         private IQueryable<Product> GetProductsQuery(int? brandId = null, int? typeId = null, ProductSortByEnum? productSortBy = null, SortOrderEnum? sortOrderEnum = SortOrderEnum.Ascending, int skip = 0, int take = 0, bool isPagingEnabled = false, string search = "")
@@ -96,6 +71,42 @@ namespace infrastructure.Data
                 query = query.Skip(take * (skip - 1)).Take(take);
 
             return query;
+        }
+
+        public void Add(Product product)
+        {
+            _context.Set<Product>().Add(product);
+        }
+
+        public void Update(Product product)
+        {
+            _context.Set<Product>().Attach(product);
+            _context.Entry(product).State = EntityState.Modified;
+        }
+
+        public void Delete(Product product)
+        {
+            _context.Set<Product>().Remove(product);
+        }
+
+        public async Task<Product> GetByIdAsync(int id)
+        {
+            var query = GetProductsQuery();
+            return await query.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IReadOnlyList<Product>> GetAllAsync(IRepositoryParameters repositoryParameters)
+        {
+            var productRepositoryObject = (ProductRepositoryObject)repositoryParameters;
+            var productsQuery = GetProductsQuery(productRepositoryObject.BrandId, productRepositoryObject.TypeId, productRepositoryObject.SortBy, productRepositoryObject.SortOrder, productRepositoryObject.Skip, productRepositoryObject.Take, productRepositoryObject.IsPagingEnabled, productRepositoryObject.Search);
+            return await productsQuery.ToListAsync();
+        }
+
+        public async Task<int> CountAsync(IRepositoryParameters repositoryParameters)
+        {
+            var productRepositoryObject = (ProductRepositoryObject)repositoryParameters;
+            var productsQuery = GetProductsQuery(productRepositoryObject.BrandId, productRepositoryObject.TypeId, productRepositoryObject.SortBy, productRepositoryObject.SortOrder, productRepositoryObject.Skip, productRepositoryObject.Take, false, productRepositoryObject.Search);
+            return await productsQuery.CountAsync();
         }
     }
 }
