@@ -32,7 +32,8 @@ namespace infrastructure.Data
             if (_repositories == null) _repositories = new Hashtable();
 
             var type = typeof(T).Name;
-            
+            type = "infrastructure.Data." + type + "Repository";
+
             if (!_repositories.ContainsKey(type))
             {
                 var repositoryType = Type.GetType(type);

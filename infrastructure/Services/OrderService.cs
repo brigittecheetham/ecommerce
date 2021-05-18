@@ -57,7 +57,7 @@ namespace infrastructure.Services
         {
             var order = await _unitOfWork.Repository<Order>().GetByIdAsync(id);
             
-            if (order.BuyerEmail != buyerEmail)
+            if (order?.BuyerEmail != buyerEmail)
             {
                 return null;
             }

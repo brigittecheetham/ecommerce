@@ -31,9 +31,9 @@ namespace infrastructure.Data
             throw new System.NotImplementedException();
         }
 
-        public Task<IReadOnlyList<DeliveryMethod>> GetAllAsync(IRepositoryParameters repositoryParameters)
+        public async Task<IReadOnlyList<DeliveryMethod>> GetAllAsync(IRepositoryParameters repositoryParameters)
         {
-            throw new System.NotImplementedException();
+            return await _context.DeliveryMethods.ToListAsync();
         }
 
         public async Task<DeliveryMethod> GetByIdAsync(int id)

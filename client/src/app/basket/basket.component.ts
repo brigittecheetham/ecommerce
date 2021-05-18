@@ -26,6 +26,7 @@ export class BasketComponent implements OnInit {
   }
 
   onTrashItemClick(basketItem: IBasketItem) {
+    console.log('received remove event');
     this.basketService.removeItem(basketItem);
   }
 }
