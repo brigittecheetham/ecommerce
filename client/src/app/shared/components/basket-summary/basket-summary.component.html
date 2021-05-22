@@ -1,8 +1,7 @@
-<ng-container *ngIf="basket$ | async"><ng-container>
-
+<ng-container *ngIf="items.length > 0">
   <div class="table-responsive">
     <table class="table">
-      <thead>
+      <thead [class.thead-light]="isBasket || isOrder" class="border-0 py-2">
         <tr>
           <th class="tbl-column-header" scope="col">
             <div class="p-2 px-3 text-uppercase">Product</div>
@@ -23,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of (basket$ | async).basketItems">
+        <tr *ngFor="let item of items">
           <th scope="row">
             <div class="p-2">
               <img
