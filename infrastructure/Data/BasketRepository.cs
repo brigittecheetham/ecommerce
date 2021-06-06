@@ -23,6 +23,8 @@ namespace infrastructure.Data
 
         public async Task<CustomerBasket> GetBasketAsync(string basketId)
         {
+            Console.WriteLine(basketId);
+            Console.WriteLine(_database.Database.ToString() + " " + _database.Multiplexer.ClientName + " " + _database.Multiplexer.Configuration);
             var data = await _database.StringGetAsync(basketId);
             return data.IsNullOrEmpty ? null : JsonSerializer.Deserialize<CustomerBasket>(data);
         }

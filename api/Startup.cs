@@ -78,6 +78,7 @@ namespace api
             services.AddScoped<IProductBrandRepository, ProductBrandRepository>();
             services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddIdentityServices(_configuration);
 
