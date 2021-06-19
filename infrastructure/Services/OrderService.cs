@@ -12,9 +12,11 @@ namespace infrastructure.Services
     {
         private readonly IBasketRepository _basketRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPaymentService _paymentService;
 
-        public OrderService(IBasketRepository basketRepository, IUnitOfWork unitOfWork)
+        public OrderService(IBasketRepository basketRepository, IUnitOfWork unitOfWork, IPaymentService paymentService)
         {
+            _paymentService = paymentService;
             _unitOfWork = unitOfWork;
             _basketRepository = basketRepository;
         }
@@ -36,15 +38,26 @@ namespace infrastructure.Services
 
             var subtotal = items.Sum(item => item.Price * item.Quantity);
 
-            var order = new Order(buyerEmail, shippingAddress, deliveryMethod, subtotal, items);
+            var orderRepositoryObject = new OrderRepositoryObject
+            {
+                PaymentIntentId = basket.PaymentIntendId
+            };
+
+            var existingOrder = await _unitOfWork.Repository<Order>().GetAllAsync(orderRepositoryObject);
+
+            if (existingOrder.Any())
+            {
+                _unitOfWork.Repository<Order>().Delete(existingOrder[0]);
+                await _paymentService.CreateOrUpdatePaymentIntent(basket.PaymentIntendId);
+            }
+
+            var order = new Order(buyerEmail, shippingAddress, deliveryMethod, subtotal, items, basket.PaymentIntendId);
             _unitOfWork.Repository<Order>().Add(order);
 
             var result = await _unitOfWork.Complete();
 
             if (result <= 0) return null;
-
-            await _basketRepository.DeleteBasketAsync(basketId);
-
+            
             return order;
         }
 
@@ -56,7 +69,7 @@ namespace infrastructure.Services
         public async Task<Order> GetOrderByIdAsync(int id, string buyerEmail)
         {
             var order = await _unitOfWork.Repository<Order>().GetByIdAsync(id);
-            
+
             if (order?.BuyerEmail != buyerEmail)
             {
                 return null;
@@ -69,7 +82,7 @@ namespace infrastructure.Services
         {
             var orderRepositoryObject = new OrderRepositoryObject
             {
-                   BuyerEmail = buyerEmail
+                BuyerEmail = buyerEmail
             };
 
             return await _unitOfWork.Repository<Order>().GetAllAsync(orderRepositoryObject);

@@ -31,7 +31,7 @@ namespace infrastructure.Data
 
         public void Delete(Order entity)
         {
-            throw new System.NotImplementedException();
+            _context.Remove<Order>(entity);
         }
 
         public async Task<IReadOnlyList<Order>> GetAllAsync(IRepositoryParameters repositoryParameters)
@@ -49,7 +49,7 @@ namespace infrastructure.Data
 
         public void Update(Order entity)
         {
-            throw new System.NotImplementedException();
+            _context.Update<Order>(entity);
         }
 
         private IQueryable<Order> GetOrderQuery(OrderRepositoryObject orderRepositoryObject)
@@ -61,7 +61,12 @@ namespace infrastructure.Data
 
             if (!string.IsNullOrEmpty(orderRepositoryObject?.BuyerEmail))
             {
-                query.Where(e => e.BuyerEmail == orderRepositoryObject.BuyerEmail);
+                query = query.Where(e => e.BuyerEmail == orderRepositoryObject.BuyerEmail);
+            }
+
+            if (!string.IsNullOrEmpty(orderRepositoryObject?.PaymentIntentId))
+            {
+                query = query.Where(e => e.PaymentIntentId == orderRepositoryObject.PaymentIntentId);
             }
 
             return query;

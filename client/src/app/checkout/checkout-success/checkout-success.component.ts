@@ -15,9 +15,8 @@ export class CheckoutSuccessComponent implements OnInit {
 
     if (state) {
       this.order = state as IOrder;
-    } else {
-      
-    }
+      console.log(this.order.id);
+    } 
   }
 
   ngOnInit(): void {
